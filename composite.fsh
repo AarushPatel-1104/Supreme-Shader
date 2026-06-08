@@ -1,5 +1,6 @@
 //composite.fsh
 #include "settings.glsl"
+#imclude "raymarch.glsl"
 
 //Uniforms
 #ifdef OPTIFINE
@@ -25,14 +26,18 @@ int getQualitySteps() {
 void main() {
     //determine quality for thisframe
     int steps = getQualitySteps();
-    //Placeholder for future Ray MArching call
+    //Ray origin and Ray direction
+    vec2 uv = (gl_FragCoord.xy * 2.0 - 1920.0) / 1080.0;
+    vec3 ro = vec3(0.0, 0.0, -3.0);
+    vec3 rd = normalize(vec3(uv, 1.0));
+    float d = rayMarch(ro, rd, steps);
     // Debug Visulizer: If running in low mode, apply a subtle Red tint
     #if DEBUG_MODE == 1
-        vec3 debugColor = (steps == STEPS_LOW) ?
-    vec3(0.2, 0.0, 0.0) : vec3(0.0);
-        gl_FragColor = vec4(debugColor, 1.0);
+        vec3 Color = (steps == STEPS_LOW) ?
+    vec3(0.2, 0.0, 0.0) : vec3(d / 5.0);
+        gl_FragColor = vec4(Color, 1.0);
     #else
         //Main rendering logic
-        gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+        gl_FragColor = vec4(vec3(d/5.0), 1.0);
     #endif
 }
