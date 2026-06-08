@@ -11,15 +11,13 @@
 #endif
 
 //Global variable to keep the track of performance
-float smoothedFrameTime = 0.0;
+uniform float frameTimePrev;
 
 int getQualitySteps() {
-    //Exponential Moving Average(Low-Pass Filter)
-    smoothedFrameTime = mix(smoothedFrameTime, TIME_VAR, SMOOTHING_FACTOR);
-    //Adjust steps based on smoothed performance
-    if (smoothedFrameTime > FPS_THRESHOLD_LOW) {return STEPS_LOW;
+    //Adjust steps based on previous frame time
+    if (frameTimePrev > FPS_THRESHOLD_LOW) {return STEPS_LOW;
     }
-    else if (smoothedFrameTime > FPS_THRESHOLD_MED) {return STEPS_MED;
+    else if (frameTimePrev > FPS_THRESHOLD_MED) {return STEPS_MED;
     }
     else {return STEPS_HIGH;
     }
