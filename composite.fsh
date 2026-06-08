@@ -3,13 +3,21 @@
 
 //Uniforms provided by Minecraft/Iris
 uniform float frametime;
+//Uniforms Fix
+#ifdef OPTIFINE
+    uniform float frameTime;
+    #define TIME_VAR frameTime
+#else
+    uniform float frametime;
+    #define TIME_VAR frametime
+#endif
 
 //Global variable to keep the track of performance
 float smoothedFrameTime = 0.0;
 
 int getQualitySteps() {
     //Exponential Moving Average(Low-Pass Filter)
-    smoothedFrameTime = mix(smoothedFrameTime, frametime, SMOOTHING_FACTOR);
+    smoothedFrameTime = mix(smoothedFrameTime, TIME_VAR, SMOOTHING_FACTOR);
     //Adjust steps based on smoothed performance
     if (smoothedFrameTime > FPS_THRESHOLD_LOW) {return STEPS_LOW;
     }

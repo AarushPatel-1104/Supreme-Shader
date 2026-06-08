@@ -1,0 +1,5 @@
+1) Added basic optimaztion
+    Testing - Error composite not loading
+        Fix - Error caused due to different uniforms 
+            Fixed in composite.fsh
+2)
