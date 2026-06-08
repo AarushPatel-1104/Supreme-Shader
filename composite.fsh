@@ -1,9 +1,7 @@
 //composite.fsh
 #include "settings.glsl"
 
-//Uniforms provided by Minecraft/Iris
-uniform float frametime;
-//Uniforms Fix
+//Uniforms
 #ifdef OPTIFINE
     uniform float frameTime;
     #define TIME_VAR frameTime
