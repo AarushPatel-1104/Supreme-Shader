@@ -47,6 +47,10 @@ void main() {
         vec3 lightDir = normalize(vec3(1.0, 1.0, -1.0));
         float diff = max(dot(n, lightDir), 0.0);
         
+        // Temporal Decay: Creates a pulsing light effect that fades in and out
+        float pulse = sin(TIME_VAR * 0.5) * 0.5 + 0.5; // Oscillates between 0 and 1
+        diff *= pulse; // The light intensity now decays/pulses over time
+        
         // --- Material & Glow ---
         vec3 objColor = getColor(p);
         
