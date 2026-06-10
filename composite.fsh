@@ -14,7 +14,8 @@
 uniform float frameTimePrev;
 uniform float viewWidth;
 uniform float viewHeight;
-uniform sampler2D gcolor; // Required to read the Minecraft game world
+uniform sampler2D gcolor; 
+uniform sampler2D depthtex0;
 
 // --- Preprocessor Compatibility ---
 #ifdef OPTIFINE
