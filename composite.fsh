@@ -16,7 +16,7 @@ uniform float viewHeight;
 
 // --- Preprocessor Compatibility ---
 #ifdef OPTIFINE
-    unifrom float frameTime;
+    uniform float frameTime;
     #define TIME_VAR frameTime
 #else
     uniform float frametime;
