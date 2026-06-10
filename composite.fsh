@@ -72,6 +72,6 @@ void main() {
         gl_FragColor = vec4(finalColor / (finalColor + vec3(1.0)), 1.0);
     } else {
         // [6] ENVIRONMENT: Output Minecraft game world
-        gl_FragColor = vec4(mcColor, 1.0);
+        gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
     }
 }
