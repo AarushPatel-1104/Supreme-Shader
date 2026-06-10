@@ -14,8 +14,8 @@
 uniform float frameTimePrev;
 uniform float viewWidth;
 uniform float viewHeight;
-uniform sampler2D gcolor; 
-uniform sampler2D depthtex0;
+uniform sampler2D gcolor;   // Minecraft scene color
+uniform sampler2D depthtex0; // Minecraft scene depth
 
 // --- Preprocessor Compatibility ---
 #ifdef OPTIFINE
@@ -45,12 +45,14 @@ void main() {
     // [3] MARCHING: SDF Traversal
     float d = rayMarch(ro, rd, steps);
     
-    // [4] LIGHTING: Surface Shading & Atmospheric Effects
+    // [4] LIGHTING & INTEGRATION
     vec3 finalColor = vec3(0.0);
     
     // Sample the background Minecraft frame
-    vec3 mcColor = texture2D(gcolor, gl_FragCoord.xy / vec2(viewWidth, viewHeight)).rgb;
+    vec2 texCoord = gl_FragCoord.xy / vec2(viewWidth, viewHeight);
+    vec3 mcColor = texture2D(gcolor, texCoord).rgb;
     
+    // If the ray-marcher finds an object closer than the game geometry, draw it
     if (d < 100.0) { 
         // --- Surface Calculation ---
         vec3 p = ro + rd * d;
@@ -68,10 +70,10 @@ void main() {
         finalColor = (objColor * (diff + 0.2)) + (bloom * 0.5);
         finalColor *= exp(-d * 0.05);
         
-        // Output the spheres blended with the scene
+        // Apply tone mapping and output
         gl_FragColor = vec4(finalColor / (finalColor + vec3(1.0)), 1.0);
     } else {
-        // [6] ENVIRONMENT: Output Minecraft game world
-        gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+        // [6] ENVIRONMENT: Output the raw Minecraft world
+        gl_FragColor = vec4(mcColor, 1.0);
     }
 }
