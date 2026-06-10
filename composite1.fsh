@@ -15,8 +15,8 @@ uniform float viewWidth;
 uniform float viewHeight;
 
 // --- Inputs ---
-uniform sampler2D composite;     // Current frame buffer
-uniform sampler2D prevComposite; // Previous frame buffer (used for temporal effects)
+uniform sampler2D composite;      // Current frame buffer
+uniform sampler2D prevComposite;  // Previous frame buffer (used for temporal effects)
 
 void main() {
     // [1] UV NORMALIZATION
