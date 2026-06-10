@@ -31,12 +31,6 @@
 // metrics and heat-map visualization of step counts.
 #define DEBUG_MODE 1
 
-// This function tells the engine to pick a quality tier based on frametime
-int getQualitySteps() {
-    if (frameTimePrev > FPS_THRESHOLD_LOW) return STEPS_LOW;
-    if (frameTimePrev > FPS_THRESHOLD_MED) return STEPS_MED;
-    return STEPS_HIGH;
-}
 /* * ----------------------------------------------------------------------------
  * Performance Tuning Insight:
  */

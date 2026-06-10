@@ -24,6 +24,13 @@ uniform float viewHeight;
     #define TIME_VAR frametime
 #endif
 
+// [NEW] The function now has direct access to frameTimePrev!
+int getQualitySteps() {
+    if (frameTimePrev > FPS_THRESHOLD_LOW) return STEPS_LOW;
+    if (frameTimePrev > FPS_THRESHOLD_MED) return STEPS_MED;
+    return STEPS_HIGH;
+}
+
 void main() {
     // [1] PERFORMANCE: Dynamic Quality Scaling
     // Adjusts step count based on frame budget to maintain consistent performance.
