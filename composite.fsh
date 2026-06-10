@@ -32,7 +32,6 @@ int getQualitySteps() {
 }
 
 void main() {
-    int steps = getQualitySteps();
     // [1] PERFORMANCE: Dynamic Quality Scaling
     // Adjusts step count based on frame budget to maintain consistent performance.
     int steps = getQualitySteps();
