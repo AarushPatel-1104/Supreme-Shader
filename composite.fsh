@@ -16,8 +16,10 @@ uniform float viewHeight;
 
 // --- Preprocessor Compatibility ---
 #ifdef OPTIFINE
+    unifrom float frameTime;
     #define TIME_VAR frameTime
 #else
+    uniform float frametime;
     #define TIME_VAR frametime
 #endif
 
@@ -47,7 +49,7 @@ void main() {
         vec3 lightDir = normalize(vec3(1.0, 1.0, -1.0));
         float diff = max(dot(n, lightDir), 0.0);
         
-        // Temporal Decay: Creates a pulsing light effect that fades in and out
+        // [5] Temporal Decay: Creates a pulsing light effect that fades in and out
         float pulse = sin(TIME_VAR * 0.5) * 0.5 + 0.5; // Oscillates between 0 and 1
         diff *= pulse; // The light intensity now decays/pulses over time
         
@@ -68,7 +70,7 @@ void main() {
         finalColor = mix(vec3(0.02, 0.02, 0.05), vec3(0.1, 0.1, 0.2), sky);
     }
 
-    // [5] POST-FX: Tone Mapping
+    // [6] POST-FX: Tone Mapping
     // Normalizes colors into the displayable range (Reinhard mapping)
     // and outputs the final color to the frame buffer.
     finalColor = finalColor / (finalColor + vec3(1.0));
@@ -78,4 +80,3 @@ void main() {
 /* * ----------------------------------------------------------------------------
  * Rendering Logic Visualization:
  */
- 
