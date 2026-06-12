@@ -7,18 +7,17 @@
  */
 
 // [1] SDF (Signed Distance Field)
-// Defines the labyrinth's shape. We use the modulo operator to create an 
-// infinite repeating grid of spheres, ensuring memory efficiency.
 float map(vec3 p) {
-    vec3 q = mod(p, 4.0) - 2.0; 
-    return length(q) - 1.0; 
+    // Changing 4.0 to 12.0 increases the distance between spheres
+    vec3 q = mod(p + 6.0, 12.0) - 6.0; 
+    return length(q) - 2.5; // Radius of 2.5
 }
 
-// [2] PROCEDURAL COLORING
-// Generates vibrant, smooth color transitions based on spatial coordinates
-// using a cosine-based palette oscillator.
+// [2] PROCEDURAL COLORING - Add Transparency (Alpha)
 vec3 getColor(vec3 p) {
-    return 0.5 + 0.5 * cos(p * 0.5 + vec3(0, 2, 4));
+    vec3 q = mod(p + 6.0, 12.0) - 6.0;
+    // Brighter, bubble-like colors
+    return 0.5 + 0.5 * sin(q * 0.5 + vec3(0, 2, 4));
 }
 
 // [3] SURFACE NORMALS
