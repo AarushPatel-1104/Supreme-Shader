@@ -73,11 +73,7 @@ void main() {
         // Apply tone mapping and output
         gl_FragColor = vec4(finalColor / (finalColor + vec3(1.0)), 1.0);
     } else {
-<<<<<<< HEAD
-        // [6] ENVIRONMENT: Output Minecraft game world
-=======
         // [6] ENVIRONMENT: Output the raw Minecraft world
->>>>>>> e528f46 (Main Shader Files)
         gl_FragColor = vec4(mcColor, 1.0);
     }
 }
