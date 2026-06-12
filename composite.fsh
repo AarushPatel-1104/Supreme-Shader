@@ -14,8 +14,9 @@
 uniform float frameTimePrev;
 uniform float viewWidth;
 uniform float viewHeight;
-uniform sampler2D gcolor;   // Minecraft scene color
-uniform sampler2D depthtex0; // Minecraft scene depth
+uniform vec3 cameraPosition;    // ADDED: The actual player position
+uniform sampler2D gcolor;       // Minecraft scene color
+uniform sampler2D depthtex0;    // Minecraft scene depth
 
 // --- Preprocessor Compatibility ---
 #ifdef OPTIFINE
@@ -38,9 +39,13 @@ void main() {
     int steps = getQualitySteps();
     
     // [2] CAMERA: Projection Setup
-    vec2 uv = (gl_FragCoord.xy * 2.0 - vec2(viewWidth, viewHeight)) / viewHeight;
-    vec3 ro = vec3(sin(TIME_VAR * 0.2) * 2.0, 0.0, TIME_VAR * 1.5); 
-    vec3 rd = normalize(vec3(uv, 1.0));
+    vec2 texCoord = gl_FragCoord.xy / vec2(viewWidth, viewHeight);
+    
+    // CHANGED: Using cameraPosition to sync with Minecraft's actual movement
+    vec3 ro = cameraPosition; 
+    
+    // This ray direction setup handles the perspective projection
+    vec3 rd = normalize(vec3((gl_FragCoord.xy * 2.0 - vec2(viewWidth, viewHeight)) / viewHeight, 1.0));
     
     // [3] MARCHING: SDF Traversal
     float d = rayMarch(ro, rd, steps);
@@ -50,8 +55,7 @@ void main() {
     float depth = texture2D(depthtex0, texCoord).r;
     
     // [5] RENDERING LOGIC: Depth-Aware Composition
-    // Convert depth to a rough linear scale to compare with raymarch distance 'd'
-    // Adjust the 200.0 multiplier if objects appear too far/close compared to blocks
+    // The multiplier '200.0' scales the depth buffer to world units
     bool isObjectCloser = (d < 100.0) && (d < (depth * 200.0)); 
 
     if (isObjectCloser) { 
