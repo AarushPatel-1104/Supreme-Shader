@@ -15,7 +15,6 @@ uniform float frameTimePrev;
 uniform float viewWidth;
 uniform float viewHeight;
 uniform sampler2D gcolor;   // Minecraft scene color
-uniform sampler2D depthtex0; // Minecraft scene depth
 
 // --- Preprocessor Compatibility ---
 #ifdef OPTIFINE
@@ -38,21 +37,17 @@ void main() {
     int steps = getQualitySteps();
     
     // [2] CAMERA: Projection Setup
-    vec2 uv = (gl_FragCoord.xy * 2.0 - vec2(viewWidth, viewHeight)) / viewHeight;
+    vec2 texCoord = gl_FragCoord.xy / vec2(viewWidth, viewHeight);
     vec3 ro = vec3(sin(TIME_VAR * 0.2) * 2.0, 0.0, TIME_VAR * 1.5); 
-    vec3 rd = normalize(vec3(uv, 1.0));
+    vec3 rd = normalize(vec3((gl_FragCoord.xy * 2.0 - vec2(viewWidth, viewHeight)) / viewHeight, 1.0));
     
     // [3] MARCHING: SDF Traversal
     float d = rayMarch(ro, rd, steps);
     
-    // [4] LIGHTING & INTEGRATION
-    vec3 finalColor = vec3(0.0);
-    
-    // Sample the background Minecraft frame
-    vec2 texCoord = gl_FragCoord.xy / vec2(viewWidth, viewHeight);
+    // [4] INTEGRATION: Sample Minecraft scene using the declared gcolor sampler
     vec3 mcColor = texture2D(gcolor, texCoord).rgb;
     
-    // If the ray-marcher finds an object closer than the game geometry, draw it
+    // [5] RENDERING LOGIC
     if (d < 100.0) { 
         // --- Surface Calculation ---
         vec3 p = ro + rd * d;
@@ -60,20 +55,22 @@ void main() {
         vec3 lightDir = normalize(vec3(1.0, 1.0, -1.0));
         float diff = max(dot(n, lightDir), 0.0);
         
-        // [5] Temporal Decay: Creates a pulsing light effect
+        // Temporal Pulse Effect
         float pulse = sin(TIME_VAR * 0.5) * 0.5 + 0.5;
         diff *= pulse;
         
         // --- Material & Glow ---
         vec3 objColor = getColor(p);
         vec3 bloom = pow(objColor * (diff + 0.5), vec3(2.0)); 
-        finalColor = (objColor * (diff + 0.2)) + (bloom * 0.5);
+        vec3 finalColor = (objColor * (diff + 0.2)) + (bloom * 0.5);
         finalColor *= exp(-d * 0.05);
         
-        // Apply tone mapping and output
         gl_FragColor = vec4(finalColor / (finalColor + vec3(1.0)), 1.0);
     } else {
-        // [6] ENVIRONMENT: Output the raw Minecraft world
+        // [6] ENVIRONMENT: Output Minecraft game world
         gl_FragColor = vec4(mcColor, 1.0);
+        
+        // Force depth to far plane to prevent clipping
+        gl_FragDepth = 1.0; 
     }
 }
