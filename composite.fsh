@@ -15,6 +15,7 @@ uniform float frameTimePrev;
 uniform float viewWidth;
 uniform float viewHeight;
 uniform sampler2D gcolor;   // Minecraft scene color
+uniform sampler2D depthtex0; // Minecraft scene depth
 
 // --- Preprocessor Compatibility ---
 #ifdef OPTIFINE
@@ -44,11 +45,16 @@ void main() {
     // [3] MARCHING: SDF Traversal
     float d = rayMarch(ro, rd, steps);
     
-    // [4] INTEGRATION: Sample Minecraft scene using the declared gcolor sampler
+    // [4] INTEGRATION: Sample Minecraft scene and depth
     vec3 mcColor = texture2D(gcolor, texCoord).rgb;
+    float depth = texture2D(depthtex0, texCoord).r;
     
-    // [5] RENDERING LOGIC
-    if (d < 100.0) { 
+    // [5] RENDERING LOGIC: Depth-Aware Composition
+    // Convert depth to a rough linear scale to compare with raymarch distance 'd'
+    // Adjust the 200.0 multiplier if objects appear too far/close compared to blocks
+    bool isObjectCloser = (d < 100.0) && (d < (depth * 200.0)); 
+
+    if (isObjectCloser) { 
         // --- Surface Calculation ---
         vec3 p = ro + rd * d;
         vec3 n = getNormal(p);
@@ -69,8 +75,6 @@ void main() {
     } else {
         // [6] ENVIRONMENT: Output Minecraft game world
         gl_FragColor = vec4(mcColor, 1.0);
-        
-        // Force depth to far plane to prevent clipping
-        gl_FragDepth = 1.0; 
+        gl_FragDepth = depth; 
     }
 }
