@@ -45,15 +45,16 @@ void main() {
     // [3] MARCHING: SDF Traversal
     float d = rayMarch(ro, rd, steps);
     
-    // [4] LIGHTING & INTEGRATION
-    vec3 finalColor = vec3(0.0);
-    
-    // Sample the background Minecraft frame
-    vec2 texCoord = gl_FragCoord.xy / vec2(viewWidth, viewHeight);
+    // [4] INTEGRATION: Sample Minecraft scene and depth
     vec3 mcColor = texture2D(gcolor, texCoord).rgb;
+    float depth = texture2D(depthtex0, texCoord).r;
     
-    // If the ray-marcher finds an object closer than the game geometry, draw it
-    if (d < 100.0) { 
+    // [5] RENDERING LOGIC: Depth-Aware Composition
+    // Convert depth to a rough linear scale to compare with raymarch distance 'd'
+    // Adjust the 200.0 multiplier if objects appear too far/close compared to blocks
+    bool isObjectCloser = (d < 100.0) && (d < (depth * 200.0)); 
+
+    if (isObjectCloser) { 
         // --- Surface Calculation ---
         vec3 p = ro + rd * d;
         vec3 n = getNormal(p);
@@ -75,5 +76,6 @@ void main() {
     } else {
         // [6] ENVIRONMENT: Output the raw Minecraft world
         gl_FragColor = vec4(mcColor, 1.0);
+        gl_FragDepth = depth; 
     }
 }
