@@ -65,17 +65,16 @@ void main() {
         vec3 lightDir = normalize(vec3(1.0, 1.0, -1.0));
         float diff = max(dot(n, lightDir), 0.0);
         
-        // Temporal Pulse Effect
-        float pulse = sin(TIME_VAR * 0.5) * 0.5 + 0.5;
-        diff *= pulse;
-        
-        // --- Material & Glow ---
+        // Material & Glow
         vec3 objColor = getColor(p);
-        vec3 bloom = pow(objColor * (diff + 0.5), vec3(2.0)); 
-        vec3 finalColor = (objColor * (diff + 0.2)) + (bloom * 0.5);
-        finalColor *= exp(-d * 0.05);
+        vec3 finalColor = objColor * (diff + 0.3);
         
-        gl_FragColor = vec4(finalColor / (finalColor + vec3(1.0)), 1.0);
+        // [ALPHA BLENDING] 
+        // We blend the object color (objColor) with the world color (mcColor)
+        // 0.3 is the transparency level (70% transparent)
+        vec3 blendedColor = mix(mcColor, finalColor, 0.3);
+        
+        gl_FragColor = vec4(blendedColor, 1.0);
     } else {
         // [6] ENVIRONMENT: Output Minecraft game world
         gl_FragColor = vec4(mcColor, 1.0);
