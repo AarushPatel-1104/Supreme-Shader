@@ -25,6 +25,8 @@ Hardware: It’s built and tested on an MX330. If you’re running this on an in
 
 Status: Version 1.0 (It works on my machine, which is all that matters for now).
 
+Tested on 1.20.1+ with Iris. It should work on older versions, but I honestly haven't tested it because I don't have the time to go back and debug legacy versions.
+
 # Installation
 Requirements: Needs Iris or OptiFine. (better to have fabric+sodium+lithium+iris)
 
