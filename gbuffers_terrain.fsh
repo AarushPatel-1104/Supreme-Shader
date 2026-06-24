@@ -4,6 +4,8 @@ uniform sampler2D texture;
 varying vec2 texCoord;
 
 void main() {
-    // This simple code ensures the terrain is drawn into the buffer
+    // Basic terrain draw call. 
+    // FIXME: Not currently blending lightmap data—everything looks flat.
+    // Need to multiply by lightmap texture once I figure out the coordinate mapping.
     gl_FragColor = texture2D(texture, texCoord);
 }
