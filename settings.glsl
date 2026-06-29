@@ -5,6 +5,8 @@
  * ----------------------------------------------------------------------------
  */
 
+// change at ur own risk
+
 // --- Quality Tiers ---
 // Sample counts per ray march. 
 // FIXME: High setting kills mobile GPUs; watch out for heat throttling.
@@ -19,6 +21,7 @@
 
 // --- Performance Thresholds ---
 // SPF targets.
+// no potatao pc
 // Note: 0.033 is 30fps, 0.016 is 60fps.
 #define FPS_THRESHOLD_LOW 0.033 
 #define FPS_THRESHOLD_MED 0.016 

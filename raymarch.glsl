@@ -5,6 +5,8 @@
  * ----------------------------------------------------------------------------
  */
 
+// this will blow ur gpu as it did with me
+
 // [1] SDF (Signed Distance Field)
 float map(vec3 p) {
     // 12.0 spacing is arbitrary. Need to figure out a better way to handle 
@@ -44,3 +46,5 @@ float rayMarch(vec3 ro, vec3 rd, int maxSteps) {
     }
     return totalDistance;
 }
+
+// finally ended this hecky thing, i drew every drop of my blooc out from me

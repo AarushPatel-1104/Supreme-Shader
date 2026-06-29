@@ -10,9 +10,9 @@
 
 uniform float viewWidth;
 uniform float viewHeight;
-
 uniform sampler2D composite;      
 uniform sampler2D prevComposite;  
+// i wonder if minecraft also wear uniform
 
 void main() {
     vec2 uv = gl_FragCoord.xy / vec2(viewWidth, viewHeight);
@@ -23,6 +23,7 @@ void main() {
     vec2 distUV = uv - 0.5;
     distUV *= (1.0 + dot(distUV, distUV) * 0.15);
     vec2 centeredUV = distUV + 0.5;
+    // this will distorte ur gpu along with monitor
 
     // [3] TEMPORAL BLUR
     // blending prev frame for motion smoothing. 
